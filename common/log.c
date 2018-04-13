@@ -28,6 +28,7 @@ bool _sway_assert(bool condition, const char *format, ...) {
 	va_end(args);
 
 #ifndef NDEBUG
+	((char*)0)[0] = 1;
 	raise(SIGABRT);
 #endif
 
