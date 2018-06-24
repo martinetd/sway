@@ -158,3 +158,62 @@ void list_free_items_and_destroy(list_t *list) {
 	list_free(list);
 }
 
+#include <wayland-server.h>
+void
+wl_list_init(struct wl_list *list)
+{
+	list->prev = list;
+	list->next = list;
+}
+
+void
+wl_list_insert(struct wl_list *list, struct wl_list *elm)
+{
+	elm->prev = list;
+	elm->next = list->next;
+	list->next = elm;
+	elm->next->prev = elm;
+}
+
+void
+wl_list_remove(struct wl_list *elm)
+{
+	elm->prev->next = elm->next;
+	elm->next->prev = elm->prev;
+	elm->next = NULL;
+	elm->prev = NULL;
+}
+
+int
+wl_list_length(const struct wl_list *list)
+{
+	struct wl_list *e;
+	int count;
+
+	count = 0;
+	e = list->next;
+	while (e != list) {
+		e = e->next;
+		count++;
+	}
+
+	return count;
+}
+
+int
+wl_list_empty(const struct wl_list *list)
+{
+	return list->next == list;
+}
+
+void
+wl_list_insert_list(struct wl_list *list, struct wl_list *other)
+{
+	if (wl_list_empty(other))
+		return;
+
+	other->next->prev = list;
+	other->prev->next = list->next;
+	list->next->prev = other->prev;
+	list->next = other->next;
+}
