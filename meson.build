@@ -23,6 +23,7 @@ add_project_arguments(
 	],
 	language: 'c',
 )
+# add_project_arguments('-include', '@0@/include/coverity.h'.format(meson.source_root()), language: 'c')
 
 cc = meson.get_compiler('c')
 
